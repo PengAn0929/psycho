@@ -6,7 +6,7 @@ import DisplayResultPage from '@/component/page/DisplayResultPage';
 import ResultPage from '@/component/page/ResultPage';
 import { useState } from 'react';
 
-export default function Croissant() {
+export default function croissant() {
 
   const [gameState, setGameState] = useState({
     state: 0, //0:start, 1:question, 2:displayResult, 3: result
@@ -56,8 +56,8 @@ export default function Croissant() {
 
   return (
     <>
-      <div className="w-screen h-screen bg-gray-200 flex justify-center items-center">
-        { gameState.state == 0 && <StartPage/>}
+      <div className="w-screen h-screen bg-gray-200 flex justify-center items-center overflow-auto">
+        { gameState.state == 0 && <StartPage nextStep={nextStep}/>}
         { gameState.state == 1 && <QuestionPage questionIndex={gameState.questionState} />}
         { gameState.state == 2 && <DisplayResultPage/>}
         { gameState.state == 3 && <ResultPage/>}
