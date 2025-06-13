@@ -1,34 +1,124 @@
 'use client';
 
-import { DatePicker } from 'antd';
 import MobileFrame from '@/component/layout/MobileFrame'
 import Image from 'next/image';
-import titleImg from '@/../public/0.start/title.svg'
-import BtnImg from '@/../public/0.start/startBtn.png'
-import circleImg from '@/../public/0.start/blur-circle-1.png'
+import q1Up from '@/../public/1.question/q1-up.png';
+import q1Down from '@/../public/1.question/q1-down.png';
+import circle1Img from '@/../public/1.question/blur-circle-1.png';
+import circle2Img from '@/../public/1.question/blur-circle-2.png';
+import { usePsyStore, useQuestionStore } from '@/app/store/store'
+
 
 export default function QuestionPage({questionIndex, nextStep}) {
 
+  const questionData = useQuestionStore( (state)=> state );
+  const psyData = usePsyStore( (state)=> state );
+
+
+  const clickAnswer = function(option){
+    nextStep();
+
+    psyData.updateScore(psyData.score + option.value );
+
+    console.log(option.title, option.value);
+  }
+
+  const getMainColor = function(prefix){
+    
+    let colorString = "";
+
+    if(questionIndex == 0){
+      colorString = prefix + "-[#90B62A]";
+    }else if(questionIndex == 1){
+      colorString = prefix + "-[#DD3E3E]";
+    }else{
+      colorString = prefix + "-[#1098EC]";
+    }
+
+    return colorString;
+
+  }
+
+
   return (
     <>
-    <MobileFrame>
-    QuestionPage: Q{questionIndex}
-    <div className='flex justify-center items-center flex-col gap-[60px]'>
-        <Image className="absolute top-0 -translate-y-1/2 " src={circleImg} alt='circle'/>
-        <Image src={titleImg} alt='title'/>
-        <div className="text-[#B95F0F] font-500 text-center text-[14px] leading-loose tracking-wide">
-          有些人天生酥脆，有些人出爐時就塌了。
-          你努力發酵、翻滾、等待出爐，
-          結果還是變成一坨可頌災難。
-          沒關係，這世界不缺完美麵包，
-          缺的是——像你一樣軟爛卻獨特的存在。
-          現在，就來看看你是什麼等級的失控可頌吧。
-        </div>
-        <Image onClick={nextStep} className="w-[100px]" src={BtnImg} alt="BtnImg"/>
-        <Image className="absolute bottom-0 translate-y-1/2 " src={circleImg} alt='circle'/>
-      </div>
-    </MobileFrame>
-    </>
+      <MobileFrame>
+        
 
-  )
+        <Image className=' absolute top-0 -translate-y-1/2 ' src={circle2Img} alt='circle2Img' />
+
+        
+
+
+        <div className='flex flex-col items-center gap-[26px]'>
+          <Image src={q1Up} className='w-[88px]' alt='q1Up' />
+
+          <div className='text-[#90B62A] border-2 border-[#90B62A] rounded-full w-[48px] h-[48px]
+          flex justify-center items-center font-bold text-xl '>
+            Q{questionIndex+1}
+          </div>
+          
+
+          <div 
+            className={`text-center font-bold text-3xl ${getMainColor('text')} mb-[60px]`}
+          > {questionData.questions[questionIndex+1].title} </div>
+
+
+          {            
+            questionData.questions[questionIndex+1].options.map( (option, index) => {
+
+              return (
+                <>
+                  {
+                    questionIndex == 0 && 
+                    <div 
+                      className={` bg-[#BEE351] w-full rounded-full text-white 
+                        py-[16px] text-sm flex justify-center items-center font-medium 
+                        shadow-[0px_4px_0px_1px_#90B62A] cursor-pointer hover:translate-y-0.5 transition`}
+
+                      onClick={() => clickAnswer(option)}
+                      key={option.title + "green"}
+                    > {option.title} </div>
+                  }
+
+                  {
+                    questionIndex == 1 && 
+                    <div 
+                      className={` bg-[#DD3E3E] w-full rounded-full text-white 
+                        py-[16px] text-sm flex justify-center items-center font-medium 
+                        shadow-[0px_4px_0px_1px_#8D4509] cursor-pointer hover:translate-y-0.5 transition`}
+
+                      onClick={() => clickAnswer(option)}
+                      key={option.title + "red"}
+                    > {option.title} </div>
+                  }
+
+                  {
+                    questionIndex == 2 && 
+                    <div 
+                      className={` bg-[#89BCFF] w-full rounded-full text-white 
+                        py-[16px] text-sm flex justify-center items-center font-medium 
+                        shadow-[0px_4px_0px_1px_#1098EC] cursor-pointer hover:translate-y-0.5 transition`}
+
+                      onClick={() => clickAnswer(option)}
+                      key={option.title + "blue"}
+                    > {option.title} </div>
+                  }
+                </>
+              )
+
+            })
+
+          }
+          
+
+          <Image src={q1Down} className='w-[88px]' alt='q1Down' />
+
+        </div>
+
+        <Image className=' absolute bottom-0 translate-y-1/2 ' src={circle2Img} alt='circle2Img' />
+        
+      </MobileFrame>
+    </>
+  );
 }
