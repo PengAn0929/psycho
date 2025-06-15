@@ -1,30 +1,40 @@
 'use client';
 
-import MobileFrame from '@/component/layout/MobileFrame'
+import MobileFrame from '@/component/layout/MobileFrame';
 import Image from 'next/image';
-import { usePsyStore, useQuestionStore } from '@/app/store/store'
+import { usePsyStore, useQuestionStore } from '@/app/store/store';
 
+export default function QuestionPage({ questionIndex, nextStep }) {
+  const questionData = useQuestionStore((state) => state);
+  const psyData = usePsyStore((state) => state);
 
-export default function QuestionPage({questionIndex, nextStep}) {
+  // 👉 背景圖陣列直接寫這裡
+  const bgImages = [
+    "/bg/qbg1.png",
+    "/bg/qbg2.png",
+    "/bg/qbg3.png",
+    "/bg/qbg4.png",
+    "/bg/qbg5.png",
+    "/bg/qbg6.png"
+  ];
 
-  const questionData = useQuestionStore( (state)=> state );
-  const psyData = usePsyStore( (state)=> state );
+  const bgImage = bgImages[questionIndex] || "/bg/qbg.png"; // fallback 預設背景
 
-
-  const clickAnswer = function(option){
-
-    psyData.updateScore(psyData.score + option.value );
-
+  const clickAnswer = (option) => {
+    psyData.updateScore(psyData.score + option.value);
     console.log(option.title, option.value);
     nextStep();
-  }
-
+  };
 
   return (
     <MobileFrame>
       <div
         className="absolute inset-0 z-0"
-        style={{ backgroundImage: "url('/bg/qbg.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}
+        style={{
+          backgroundImage: `url('${bgImage}')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
       />
 
       <div className="relative z-10 w-full flex flex-col items-center px-4 py-10 gap-6">
@@ -37,7 +47,7 @@ export default function QuestionPage({questionIndex, nextStep}) {
         </h2>
 
         <div className="w-full flex flex-col gap-4 mt-6">
-          {questionData.questions[questionIndex].options.map((option, index) => (
+          {questionData.questions[questionIndex].options.map((option) => (
             <div
               key={option.title}
               onClick={() => clickAnswer(option)}
