@@ -2,10 +2,6 @@
 
 import MobileFrame from '@/component/layout/MobileFrame'
 import Image from 'next/image';
-import q1Up from '@/../public/1.question/q1-up.png';
-import q1Down from '@/../public/1.question/q1-down.png';
-import circle1Img from '@/../public/1.question/blur-circle-1.png';
-import circle2Img from '@/../public/1.question/blur-circle-2.png';
 import { usePsyStore, useQuestionStore } from '@/app/store/store'
 
 
@@ -16,109 +12,42 @@ export default function QuestionPage({questionIndex, nextStep}) {
 
 
   const clickAnswer = function(option){
-    nextStep();
 
     psyData.updateScore(psyData.score + option.value );
 
     console.log(option.title, option.value);
-  }
-
-  const getMainColor = function(prefix){
-    
-    let colorString = "";
-
-    if(questionIndex == 0){
-      colorString = prefix + "-[#90B62A]";
-    }else if(questionIndex == 1){
-      colorString = prefix + "-[#DD3E3E]";
-    }else{
-      colorString = prefix + "-[#1098EC]";
-    }
-
-    return colorString;
-
+    nextStep();
   }
 
 
   return (
-    <>
-      <MobileFrame>
-        
+    <MobileFrame>
+      <div
+        className="absolute inset-0 z-0"
+        style={{ backgroundImage: "url('/bg/qbg.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}
+      />
 
-        <Image className=' absolute top-0 -translate-y-1/2 ' src={circle2Img} alt='circle2Img' />
-
-        
-
-
-        <div className='flex flex-col items-center gap-[26px]'>
-          <Image src={q1Up} className='w-[88px]' alt='q1Up' />
-
-          <div className='text-[#90B62A] border-2 border-[#90B62A] rounded-full w-[48px] h-[48px]
-          flex justify-center items-center font-bold text-xl '>
-            Q{questionIndex+1}
-          </div>
-          
-
-          <div 
-            className={`text-center font-bold text-3xl ${getMainColor('text')} mb-[60px]`}
-          > {questionData.questions[questionIndex+1].title} </div>
-
-
-          {            
-            questionData.questions[questionIndex+1].options.map( (option, index) => {
-
-              return (
-                <>
-                  {
-                    questionIndex == 0 && 
-                    <div 
-                      className={` bg-[#BEE351] w-full rounded-full text-white 
-                        py-[16px] text-sm flex justify-center items-center font-medium 
-                        shadow-[0px_4px_0px_1px_#90B62A] cursor-pointer hover:translate-y-0.5 transition`}
-
-                      onClick={() => clickAnswer(option)}
-                      key={option.title + "green"}
-                    > {option.title} </div>
-                  }
-
-                  {
-                    questionIndex == 1 && 
-                    <div 
-                      className={` bg-[#DD3E3E] w-full rounded-full text-white 
-                        py-[16px] text-sm flex justify-center items-center font-medium 
-                        shadow-[0px_4px_0px_1px_#8D4509] cursor-pointer hover:translate-y-0.5 transition`}
-
-                      onClick={() => clickAnswer(option)}
-                      key={option.title + "red"}
-                    > {option.title} </div>
-                  }
-
-                  {
-                    questionIndex == 2 && 
-                    <div 
-                      className={` bg-[#89BCFF] w-full rounded-full text-white 
-                        py-[16px] text-sm flex justify-center items-center font-medium 
-                        shadow-[0px_4px_0px_1px_#1098EC] cursor-pointer hover:translate-y-0.5 transition`}
-
-                      onClick={() => clickAnswer(option)}
-                      key={option.title + "blue"}
-                    > {option.title} </div>
-                  }
-                </>
-              )
-
-            })
-
-          }
-          
-
-          <Image src={q1Down} className='w-[88px]' alt='q1Down' />
-
+      <div className="relative z-10 w-full flex flex-col items-center px-4 py-10 gap-6">
+        <div className="text-black font-semibold text-sm border border-black rounded-full w-[48px] h-[48px] flex items-center justify-center">
+          Q{questionIndex + 1}
         </div>
 
-        <Image className=' absolute bottom-0 translate-y-1/2 ' src={circle2Img} alt='circle2Img' />
-        
-      </MobileFrame>
-    </>
+        <h2 className="text-black font-bold text-xl text-center leading-relaxed whitespace-pre-wrap">
+          {questionData.questions[questionIndex].title}
+        </h2>
+
+        <div className="w-full flex flex-col gap-4 mt-6">
+          {questionData.questions[questionIndex].options.map((option, index) => (
+            <div
+              key={option.title}
+              onClick={() => clickAnswer(option)}
+              className="w-full rounded-full bg-teal-500 text-white text-sm py-3 text-center cursor-pointer font-medium hover:scale-105 active:scale-95 transition-transform"
+            >
+              {option.title}
+            </div>
+          ))}
+        </div>
+      </div>
+    </MobileFrame>
   );
 }
